@@ -1,0 +1,11 @@
+'''输出使用到变量'''
+book_name='python程序设计教程'
+publish='天津理工大学出版社'
+pub_date='2018-09-01'
+price=25
+print('▶→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→◀')
+print('▷\t\t《',book_name,'》\t\t◁')
+print('▷\t出版社：,',publish,'\t\t◁')
+print('▷\t出版时间：,',pub_date,'\t\t\t◁')
+print('▷\t定价：,',price,'\t\t\t\t\t\t◁')
+print('▶→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→◀')

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Created by TIBCO WSDL-->
+<wsdl:definitions xmlns:tns="http://www.huawei.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns0="http://www.tibco.com/schemas/SharedResources/GoldenSO.xsd" xmlns:partyInfo="http://www.tibco.com/namespaces/bc/2002/04/partyinfo.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="SO" targetNamespace="http://www.huawei.com">
+	<wsdl:types>
+		<xs:schema xmlns="http://www.tibco.com/schemas/SharedResources/GoldenSO.xsd" targetNamespace="http://www.tibco.com/schemas/SharedResources/GoldenSO.xsd" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+			<xs:complexType name="T_MsgHeader">
+				<xs:sequence>
+					<xs:element name="BATCH_NO" type="xs:string"/>
+					<xs:element name="TOTAL_PAGE" type="xs:string"/>
+					<xs:element name="CURRENT_PAGE" type="xs:string"/>
+					<xs:element name="PAGE_SIZE" type="xs:string"/>
+					<xs:element name="TOTAL_COUNT" type="xs:string"/>
+					<xs:element name="TOKEN" type="xs:string"/>
+					<xs:element name="SUBMIT_DATE" type="xs:string"/>
+					<xs:element name="SELLOUT_TYPE" type="xs:string"/>
+					<xs:element name="PARTNER_TYPE" type="xs:string"/>
+					<xs:element name="PARTNER_ID" type="xs:string"/>
+					<xs:element name="PARTNER_NAME" type="xs:string"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="T_MsgLine">
+				<xs:sequence>
+					<xs:element name="PARTNER_ID" type="xs:string"/>
+					<xs:element name="FINAL_CUST_ID" type="xs:string"/>
+					<xs:element name="FINAL_CUST_NAME" type="xs:string"/>
+					<xs:element name="HW_ITEM_CODE" type="xs:string"/>
+					<xs:element name="QTY" type="xs:string"/>
+					<xs:element name="PRODUCT_SN" type="xs:string"/>
+					<xs:element name="DATE" type="xs:string"/>
+					<xs:element name="SHIP_TO_ADDRESS" type="xs:string"/>
+					<xs:element name="INDUSTRY" type="xs:string"/>
+					<xs:element name="RETURN_REASON" type="xs:string"/>
+					<xs:element name="ECOMMERCE_PLATFORM_NAME" type="xs:string"/>
+					<xs:element name="ECOMMERCE_STORE_TYPE" type="xs:string"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="T_MsgLines">
+				<xs:sequence>
+					<xs:element name="MsgLine" type="ns0:T_MsgLine" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:element name="GoldenSellOut">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="MsgHeader" type="ns0:T_MsgHeader"/>
+						<xs:element name="MsgLines" type="ns0:T_MsgLines"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:schema>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:pi="http://www.tibco.com/namespaces/bc/2002/04/partyinfo.xsd" targetNamespace="http://www.tibco.com/namespaces/bc/2002/04/partyinfo.xsd" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+			<complexType name="party">
+				<sequence>
+					<element name="domain" type="xsd:string" minOccurs="0"/>
+					<element name="name" type="xsd:string"/>
+				</sequence>
+			</complexType>
+			<element name="PartyInfo">
+				<complexType>
+					<sequence>
+						<element name="from" type="pi:party"/>
+						<element name="to" type="pi:party"/>
+						<element name="operationID" type="xsd:string"/>
+						<element name="operationType" type="xsd:string"/>
+						<element name="transactionID" type="xsd:string"/>
+					</sequence>
+				</complexType>
+			</element>
+		</schema>
+	</wsdl:types>
+	<wsdl:message name="Cu101EBGPartner_SO_request">
+		<wsdl:part name="body__ReceiveMessage" element="ns0:GoldenSellOut"/>
+		<wsdl:part name="PartyInfo" element="partyInfo:PartyInfo"/>
+	</wsdl:message>
+	<wsdl:portType name="Cu101EBGPartner">
+		<wsdl:documentation>BCWSDL:Cu101EBGPartner</wsdl:documentation>
+		<wsdl:operation name="SO">
+			<wsdl:documentation>BCWSDL:SO</wsdl:documentation>
+			<wsdl:input message="tns:Cu101EBGPartner_SO_request"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="Cu101EBGPartner_ReceiveMessage" type="tns:Cu101EBGPartner">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:documentation>BCWSDL:ReceiveMessage</wsdl:documentation>
+		<wsdl:operation name="SO">
+			<soap:operation soapAction="&quot;&quot;" style="document"/>
+			<wsdl:input>
+				<soap:body parts="body__ReceiveMessage" use="literal"/>
+				<soap:header message="tns:Cu101EBGPartner_SO_request" part="PartyInfo" use="literal"/>
+			</wsdl:input>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="SOService">
+		<wsdl:port name="Cu101EBGPartner_ReceiveMessage_HTTPSPort" binding="tns:Cu101EBGPartner_ReceiveMessage">
+			<soap:address location="https://apigw-beta.huawei.com/api/SOAP?X-HW-APPKEY=cVboSZsFApMMJ5vvUCd9PA==&amp;X-HW-ID=com.huawei.b2b.b2bextcust"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
