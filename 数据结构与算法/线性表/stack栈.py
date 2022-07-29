@@ -12,18 +12,41 @@ peek():“窥视”栈顶数据项，返回栈顶的数据项但不移除，栈�
 isEmpty():返回栈是否为空栈
 size():返回栈中有多少个数据项
 '''
-'''通过面向对象定义抽象数据类型栈(ADT Stack)'''
+'''通过面向对象定义抽象数据类型栈(ADT Stack)  栈顶为list尾端'''
 class Stock():
     def __init__(self):
         self.items=[]
     def isEmpty(self):
         return self.items==[]
-    def push(self,item):
+    def push(self,item): #O(1)
         self.items.append(item)
-    def pop(self):
+    def pop(self): #O(1)
         return self.items.pop()
     def peek(self):
         return self.items[len(self.items)-1]
     def size(self):
         return len(self.items)
 
+'''测试代码'''
+s=Stock()
+s.push([1,2,3,4])
+s.push('dog')
+print(s.isEmpty())
+print(s.peek())
+print(s.size())
+print(s.pop())
+
+'''通过面向对象定义抽象数据类型栈(ADT Stack)  栈顶为list首段'''
+class Stock():
+    def __init__(self):
+        self.items=[]
+    def isEmpty(self):
+        return self.items==[]
+    def push(self,item): #O(n)
+        self.items.insert(0,item)
+    def pop(self): #O(n)
+        return self.items.pop(0)
+    def peek(self):
+        return self.items[0]
+    def size(self):
+        return len(self.items)
