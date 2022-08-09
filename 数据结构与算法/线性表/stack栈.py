@@ -50,3 +50,5 @@ class Stock():
         return self.items[0]
     def size(self):
         return len(self.items)
+
+'''热土豆(也叫约瑟夫问题)'''
