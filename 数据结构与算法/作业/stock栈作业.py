@@ -17,7 +17,10 @@ class Stock():
     def size(self):
         return len(self.items)
 
+
 '''括号判断'''
+
+
 def parChecker(symbolString):
     s = Stock()
     balance = True
@@ -51,6 +54,8 @@ if __name__ == '__main__':
 
 '''判断字符串 相同的字母就消除 比如aabbcdd 结果返回c
     原理 判断是否为空栈 是空栈便将循环的字母 入栈与下一个字母比较 相同 从栈删除 不相同就将第二个字母入栈 最后输出栈内所有字母(通过join 加入到空字符串 )'''
+
+
 def parChecker1(symbolString1):
     st = Stock()
     for res in symbolString1:
@@ -75,19 +80,20 @@ def parChecker1(symbolString1):
 字符串：Yes或者No，表示遵照次序洗盘子，或者没有遵照次序洗盘子
 '''
 
+
 def parChecker2(s):
-    st=Stock()
-    n=0
-    i=0
-    while i<10 and i<10:
-        k=int(s[i])
-        if n<=k:
-            for m in range(n,k+1):
+    st = Stock()
+    n = 0
+    i = 0
+    while i < 10 and i < 10:
+        k = int(s[i])
+        if n <= k:
+            for m in range(n, k + 1):
                 st.push(m)
-            n=k+1
-        while not st.isEmpty() and st.peek()==int(s[i]):
-            m=st.pop()
-            i+=1
+            n = k + 1
+        while not st.isEmpty() and st.peek() == int(s[i]):
+            m = st.pop()
+            i += 1
     if st.isEmpty():
         print("yes")
     else:
@@ -97,3 +103,27 @@ def parChecker2(s):
 if __name__ == '__main__':
     parChecker1('aabccbd')
     parChecker2('1043257689')
+
+
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+#
+#
+# @param num int整型一维数组
+# @param size int整型
+# @return int整型一维数组
+#
+
+
+def maxInWindows(num, size):
+    s = Stock()
+    index = 0
+    for i in range(len(num)-size+1):
+        lst = (num[i:i+size])
+        s.push(max(lst))
+        index += 1
+    return s.items
+
+
+if __name__ == '__main__':
+    print(maxInWindows([2, 3, 4, 2, 6, 2, 5, 1], 3))
