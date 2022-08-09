@@ -7,6 +7,10 @@ class OrderedList:  # 创建空表
     def __init__(self):
         self.head = None
 
-      
+    def isEmpty(self):
+        return self.head==[]
+
+    def size(self):
+        return
 
 
