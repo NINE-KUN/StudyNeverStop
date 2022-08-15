@@ -7,6 +7,8 @@
 '''链表样式 head(头指针)-->节点1(数据域(数据元素)+指针域(后继指针地质))-->节点2(数据域(数据元素)+指针域(后继指针地质因为为最后一个节点 指针域为None))'''
 
 '''节点类'''
+
+
 class Node:
     def __init__(self, initdata):  # 初始化节点时 将数据项传入 并将下一个节点赋为空
         self.data = initdata
@@ -34,11 +36,48 @@ class UnorderedList:  # 建立了一个空的无序表 isEmpty为Ture
     def __init__(self):
         self.head = None
 
+    '''无序表的链表实现 根据最优性能 第一个节点加在尾部 最后一个节点加在头部'''
 
-'''无序表的链表实现 根据最优性能 第一个节点加在尾部 最后一个节点加在头部'''
+    def add(self, item):
+        temp = Node(item)  # 先生成节点
+        temp.setNext(self.head)  # 将临时节点设置为表头指向的结点
+        self.head = temp  # 再将表头设置指向新增的节点
 
+    def size(self):  # O(n)
+        current = self.head  # 将当前节点设置为头结点指向结点(即第一个节点)
+        count = 0  # 初始化一个计数器
+        while current != None:  # 当节点不为空
+            count = count + 1  # 计数器加1
+            current = current.getNext()  # 将当前结点的下一节点设置为当前结点
+        return count  # 返回计数器总和
 
-def add(self, item):
-    temp = None(item) #先生成节点
-    temp.setNext(self.head) #将临时节点设置为表头
-    self.head = temp #再将表头设置为新增的节点
+    def search(self, item):
+        current = self.head  # 初始化结点 将结点设置为表头所指结点(即)
+        found = False
+        while current != None and not found:
+            if current.getData() == item:  # 判断结点是否为查询的结点
+                found = True
+            else:
+                current = current.getNext()  # 将当前结点设置为下一结点
+        return found
+
+    '''
+        删除时需要用双指针 当current指向第一个数据是 previous指向空 
+        当current指向第二个节点时 previous指向第一个 (previous始终指向current上一个节点)
+        当current指向要删除的节点时 将previous的下一节点改为current的下一个节点 即(previous.setNext(current.getNext()))
+        '''
+
+    def remove(self, item):
+        current = self.head
+        previous = None
+        found = False
+        while not found:
+            if current.getData() == item:
+                found = True
+            else:
+                previous = current
+                current = current.getNext()
+        if previous == None: # 判断删除的节点是不是第一个节点
+            self.head = current.getNext()
+        else:
+            previous.setNext(current.getNext())
