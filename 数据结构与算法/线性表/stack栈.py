@@ -1,4 +1,3 @@
-
 '''栈 后进先出LIFO(Last in First out)
       基于数据项保存时间的次序，时间越短离栈顶越近，而时间越长的离栈底越近
       进栈和出栈顺序相反 先进后出'''
@@ -13,23 +12,31 @@ isEmpty():返回栈是否为空栈
 size():返回栈中有多少个数据项
 '''
 '''通过面向对象定义抽象数据类型栈(ADT Stack)  栈顶为list尾端'''
+
+
 class Stock():
     def __init__(self):
-        self.items=[]
+        self.items = []
+
     def isEmpty(self):
-        return self.items==[]
-    def push(self,item): #O(1)
+        return self.items == []
+
+    def push(self, item):  # O(1)
         self.items.append(item)
-    def pop(self): #O(1)
+
+    def pop(self):  # O(1)
         return self.items.pop()
+
     def peek(self):
-        return self.items[len(self.items)-1]
+        return self.items[len(self.items) - 1]
+
     def size(self):
         return len(self.items)
 
+
 '''测试代码'''
-s=Stock()
-s.push([1,2,3,4])
+s = Stock()
+s.push([1, 2, 3, 4])
 s.push('dog')
 print(s.isEmpty())
 print(s.peek())
@@ -37,18 +44,26 @@ print(s.size())
 print(s.pop())
 
 '''通过面向对象定义抽象数据类型栈(ADT Stack)  栈顶为list首段'''
+
+
 class Stock():
     def __init__(self):
-        self.items=[]
+        self.items = []
+
     def isEmpty(self):
-        return self.items==[]
-    def push(self,item): #O(n)
-        self.items.insert(0,item)
-    def pop(self): #O(n)
+        return self.items == []
+
+    def push(self, item):  # O(n)
+        self.items.insert(0, item)
+
+    def pop(self):  # O(n)
         return self.items.pop(0)
+
     def peek(self):
         return self.items[0]
+
     def size(self):
         return len(self.items)
+
 
 '''热土豆(也叫约瑟夫问题)'''
