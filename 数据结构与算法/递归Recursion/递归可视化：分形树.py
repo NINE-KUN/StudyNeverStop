@@ -8,7 +8,7 @@
     抬笔放笔：penup();pendown()
     笔属性：pensize(s);pencolor(c)'''
 
-import turtle
+import turtle  
 
 t=turtle.Turtle()
 # def drawSpiral(t,lineLen):
