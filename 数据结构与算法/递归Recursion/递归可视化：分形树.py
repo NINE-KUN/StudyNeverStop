@@ -6,7 +6,9 @@
     爬行：forward(n);backward(n)
     转向:left(a);right(a)
     抬笔放笔：penup();pendown()
-    笔属性：pensize(s);pencolor(c)'''
+    笔属性：pensize(s);pencolor(c)
+    goto:沿着绝对坐标进行运动'''
+
 
 import turtle
 
