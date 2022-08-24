@@ -27,6 +27,7 @@ class Teacher(Person):
         super().__init__(name,age)
         self.teachofyear=teachofyear
 
+
 stu=Student('钱坤',25,'20144901')
 tea=Teacher('邹涛',24,'10')
 

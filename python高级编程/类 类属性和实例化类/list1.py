@@ -34,6 +34,18 @@ class Student:  #类名由一个或多个单词组成，要求每个单词的首
         print('因为我使用了classmethon修饰，所以我是类方法')
 
 
-
-
 print(id(Student),type(Student),Student)
+
+'''由此可见 type-->class-->obj(如type-->int-->1)
+    object是最顶层的基类
+    type继承object type又实例化obeject(形成闭环)type也实例化list、str等类 
+    所以一切皆对象 一起继承obj'''
+class A:
+    pass
+class B(A):
+    pass
+print(type(A))
+print(type(B))
+
+'''type也是一个类，同时type也是一个对象
+'''

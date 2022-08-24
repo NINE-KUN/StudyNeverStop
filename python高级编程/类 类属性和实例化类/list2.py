@@ -31,7 +31,6 @@ Student.eat(Stu) # 第二种 类名.方法名(类的对象)  实际上就是方�
 
 print(Stu.Name)
 print(Stu.Age)
-
 #类属性的使用方式
 print(Student.native_pace)
 stu1=Student('魏万卉',25)
