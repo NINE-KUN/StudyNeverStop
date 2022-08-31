@@ -30,7 +30,7 @@ class Date:
     '''类方法 第一个参数是类本身 一般返回值中需要有类的时候'''
 
     @classmethod
-    def from_str(cls, date_str):
+    def from_str(cls, day_str):
         year, month, day = tuple(day_str.split("-"))  # tuple可以拆包
         '''
         return 中不再是类名称 而是用cls cls指向了类
