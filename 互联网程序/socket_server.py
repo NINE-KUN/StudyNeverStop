@@ -50,6 +50,7 @@ s.makefile()	创建一个与该套接字相关连的文件'''
 
 import socket
 import  sys
+import threading
 
 
 '''         socket编程
@@ -71,29 +72,52 @@ import  sys
           |                                   |
         close()<---------------------------close()
 '''
+
+'''实时聊天和多用户链接'''
 # 创建socket对对象
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 #获取本地主机名
 host = socket.gethostname()
 
-port=9999 #必要的 因为从
+port=9999
 
 #绑定(协议、地址和端口)
 serversocket.bind((host,port))
 #或者直接指定 serversocket.bind(('0.0.0.0',8000))
 
 #设置最大连接数、超过后排队
-serversocket.listen(5)
+serversocket.listen()
 
-while True:
-    # 建立客户端链接
-    clientsocket,addr=serversocket.accept()#accept()方法中返回了sock和addr
+#单通道通讯
+#clientsocket, addr = serversocket.accept()  # accept()方法中返回了sock和addr
 
-    print("收到数据这是我的链接地址：%s"%str(addr))
+'''serversocket.accept()每次只能接收一个请求 一个请求进来之后就加入while True无法出来
+    所以当多用户连接时 就把每一个serversocket做一个线程'''
 
-    msg='欢迎访问我的网站！'+"\r\n"
-    clientsocket.send(msg.encode('utf-8'))
+#定义一个函数 将socket_client中的逻辑拿过来
+def handle_sock(clientsocket,addr):
+    while True:
+        data = clientsocket.recv(1024)#接收数据 控制数据大小 数据为字符串
+        print(data.decode('utf-8'))#接收数据后解码 返回字符串
+        datastr=data.decode('utf-8')
+        if datastr =='bye':
+            break
+        else:
+            re_data = input()
+            clientsocket.send(re_data.encode('utf-8'))#将输入的字符串编码发送
     clientsocket.close()
+while True:
+    clientsocket,addr=serversocket.accept()#被动接受TCP客户端连接,(阻塞式)等待连接的到来
+
+    #用线程去处理新接收的链接(用户)
+    client_thread = threading.Thread(target=handle_sock,args=(clientsocket,addr))
+    client_thread.start()#启动线程
+
+    # data = clientsocket.recv(1024)
+    # print(data.decode('utf-8'))
+    # re_data=input()
+    # clientsocket.send(re_data.encode('utf-8'))
+    # # clientsocket.close()
 
 

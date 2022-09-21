@@ -39,9 +39,15 @@ port = 9999
 # 链接服务、指定主机和端口
 s.connect((host, port))
 
+while True:
+    re_data=input()
+    s.send(re_data.encode('utf-8'))
+    data = s.recv(1024)
+    print(data.decode('utf-8'))
+
 # 接收服务器端发送的数据 小于1024字节的数据
-msg = s.recv(1024) #bat类型 需要转码为utf8
-
-s.close()
-
-print(msg.decode('utf-8'))
+# msg = s.recv(1024) #bat类型 需要转码为utf8
+#
+# s.close()
+#
+# print(msg.decode('utf-8'))
