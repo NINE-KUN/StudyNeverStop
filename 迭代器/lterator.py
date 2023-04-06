@@ -20,6 +20,9 @@ print(myit)
 print(next(myit))
 print(next(myit))
 print(next(myit))
+print(next(mylist))
 print(next(mytuple))
+
+
 a=1
 

@@ -7,12 +7,16 @@
 
 
 def fib(n):
-    if n==1:
-        return 1
-    elif n==2:
+    cache = {}
+
+    if n in cache:
+        return cache[n]
+    if n==1 or n==2:
         return 1
     else:
-        return fib(n-1)+fib(n-2)
+        # return fib(n-1)+fib(n-2)
+        cache[n] = fib(n-1)+fib(n-2)
+        return cache[n]
 #斐波那契额数列第6位上的数字
 print(fib(6))
 
