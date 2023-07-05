@@ -25,7 +25,7 @@ def infixToPostfix(infixexper):
     prec["/"] = 3
     prec["+"] = 2
     prec["-"] = 2
-    prec["("] = 1
+    prec["("] = 1 
     '''解析表达式到单词列表'''
     opStack = Stock()
     postfixList = []

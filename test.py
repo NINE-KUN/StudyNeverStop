@@ -36,8 +36,8 @@
 # print(list(zip(*lst)))
 # print(list(zip(*lst,lst1)))
 
-str = 'ABBA'
-print(str[1:3],str[2:0:-1],str[0:2:-1])
+# str = 'ABBA'
+# print(str[1:3],str[2:0:-1],str[0:2:-1])
 # n = len(str)
 # list = []
 # for i in range(n-1):
@@ -47,4 +47,8 @@ print(str[1:3],str[2:0:-1],str[0:2:-1])
 #             C=str[j - 1:i:-1]
 #             list.append(len(str[i:j+1]))
 # print(max(list))
+
+s = "()[]{}"
+for i in s[1::2]:
+    print(i)
 

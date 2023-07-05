@@ -1,0 +1,45 @@
+'''列表推导式不会有变量泄露问题 
+    列表推导式、生成器表达式，以及他们相似的
+    集合（set）推导式
+    字典（dict）推导式
+    都有自己的局部作用域，就像函数似的
+    表达式内部的变量和赋值只在局部起作用'''
+x = 'ABC'
+dummy = [x for x in 'ABC']
+print(x)
+print(dummy)
+
+'''列表推导同filter和map的比较
+    filter和map合起来做的事情 列表推导式也可以做'''
+
+symbols = '$%&*()ABC'
+beyond_ascii = [ord(s) for s in symbols if ord(s)<50]
+beyond_ascii1 = list(filter(lambda c: c<50,map(ord,symbols)))
+print(beyond_ascii)
+print(beyond_ascii1)
+
+'''生成器表达式'''
+symbols = '$%&*()ABC'
+tuple = (ord(s) for s in symbols)
+print(type(tuple),tuple)
+
+
+'''具名元组 collections.namedtuple是一个工厂函数，它可以构建一个带字段名的元组
+    和一个有名字的类 这个类对调试程序有很大帮助
+    namedtuple构建的类的实例所消耗的内存跟元组是一样的，因为字段名都被存在对应的类里
+    这个实例跟普通对象的对象实例比起来小一些 因为python不会用__dict__来存放这些实例属性'''
+from collections import namedtuple
+'''具名元组需要两个参数 一个是类 一个是类的各个字段的名字 后者可以是
+    由数个字符串组成的 可迭代对象 或者 是由空格分开的字段名组成的字符串
+    存放在对应字段里的数据要以一串参数的形式传入到构造函数中（注：元组的构造函数却只接受单一的可迭代对象）'''
+city = namedtuple('City','name city population')
+toky = city('Toky','JP','36.933')
+print(toky)
+'''具名函数自己专有的属性'''
+print(city._fields) #包含这个类所有的字段名称的元组
+
+china = ('QingHai','China','28.22')  
+delhi = city._make(china)#通过接收一个可迭代对象来生成这个类的一个实例 作用和city(*china)一样
+print(city(*china))
+print(delhi)
+print(delhi._asdict()) #把具名元组以collections.OrderedDict的形式返回，利用它把元组的信息友好的展示出来（字典  ）

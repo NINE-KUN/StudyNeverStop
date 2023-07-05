@@ -3,7 +3,6 @@
     socket封装了(表示层、会话层、传输层、网络层、数据链路层、物理层)
     常用得http协议之下 可以使用tcp/ip得接口'''
 
-
 '''定义一个变量 这样就具备了数据收发能力 
    AF_INET代表使用IPV4协议 AF_UNIX代表LINUX系统协议 AF_INET6代表IPV6协议 SOCK_STREAM代表TCP协议 SOCK_DGRAM代表UDP协议
    s = socket(AF_INET, SOCK_STREAM)'''
@@ -50,9 +49,8 @@ s.makefile()	创建一个与该套接字相关连的文件'''
 完整代码如下：'''
 
 import socket
-import  sys
+import sys
 import threading
-
 
 '''         socket编程
         Server(服务器端)                    Client(客户端)
@@ -78,47 +76,49 @@ import threading
 # 创建socket对对象
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-#获取本地主机名
+# 获取本地主机名
 host = socket.gethostname()
 
-port=9999
+port = 9997
 
-#绑定(协议、地址和端口)
-serversocket.bind((host,port))
-#或者直接指定 serversocket.bind(('0.0.0.0',8000))
+# 绑定(协议、地址和端口)
+serversocket.bind((host, port))
+# 或者直接指定 serversocket.bind(('0.0.0.0',8000))
 
-#设置最大连接数、超过后排队
+# 设置最大连接数、超过后排队
 serversocket.listen()
 
-#单通道通讯
-#clientsocket, addr = serversocket.accept()  # accept()方法中返回了sock和addr
+# 单通道通讯
+# clientsocket, addr = serversocket.accept()  # accept()方法中返回了sock和addr
 
 '''serversocket.accept()每次只能接收一个请求 一个请求进来之后就加入while True无法出来
     所以当多用户连接时 就把每一个serversocket做一个线程'''
 
-#定义一个函数 将socket_client中的逻辑拿过来
-def handle_sock(clientsocket,addr):
+
+# 定义一个函数 将socket_client中的逻辑拿过来
+def handle_sock(clientsocket, addr):
     while True:
-        data = clientsocket.recv(1024)#接收数据 控制数据大小 数据为字符串
-        print(data.decode('utf-8'))#接收数据后解码 返回字符串
-        datastr=data.decode('utf-8')
-        if datastr =='bye':
+        data = clientsocket.recv(1024)  # 接收数据 控制数据大小 数据为字符串
+        print(data.decode('utf-8'))  # 接收数据后解码 返回字符串
+        datastr = data.decode('utf-8')
+        if datastr == 'bye':
             break
         else:
             re_data = input()
-            clientsocket.send(re_data.encode('utf-8'))#将输入的字符串编码发送
+            clientsocket.send(re_data.encode('utf-8'))  # 将输入的字符串编码发送
     clientsocket.close()
-while True:
-    clientsocket,addr=serversocket.accept()#被动接受TCP客户端连接,(阻塞式)等待连接的到来
 
-    #用线程去处理新接收的链接(用户)
-    client_thread = threading.Thread(target=handle_sock,args=(clientsocket,addr))
-    client_thread.start()#启动线程
+
+while True:
+    clientsocket, addr = serversocket.accept()  # 被动接受TCP客户端连接,(阻塞式)等待连接的到来
+    print(f'conn:{clientsocket},addr:{addr}')
+
+    # 用线程去处理新接收的链接(用户)
+    client_thread = threading.Thread(target=handle_sock, args=(clientsocket, addr))
+    client_thread.start()  # 启动线程
 
     # data = clientsocket.recv(1024)
     # print(data.decode('utf-8'))
     # re_data=input()
     # clientsocket.send(re_data.encode('utf-8'))
     # # clientsocket.close()
-
-
