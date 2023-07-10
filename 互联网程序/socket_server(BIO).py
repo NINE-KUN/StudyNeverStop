@@ -72,14 +72,20 @@ import threading
         close()<---------------------------close()
 '''
 
-'''实时聊天和多用户链接'''
+'''实时聊天和多用户链接 BIN(同步阻塞)  必须和客户端完成一次完整的通信 
+比如：客户端———>服务端发送111 服务端——>客户端111 才可以开始下一个客户端与服务器通信
+如果：客户端1————>服务端发送222 客户端2————>服务端发送222 然后服务端才返回信息的话 只能给客户端1返回信息 之后无法返回客户端2的信息 
+        除非客户端1重新发送请求 此时不阻塞了 服务端返回的消息才会发送给客户端2
+        (每一个客户端连接服务器都会创建一个线程)
+    单线程：某个stocket会影响其他stocket处理
+    多线程：每个客户端分配一个线程 客户端较多是造成资源浪费 '''
 # 创建socket对对象
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # 获取本地主机名
 host = socket.gethostname()
 
-port = 9997
+port = 9996
 
 # 绑定(协议、地址和端口)
 serversocket.bind((host, port))
@@ -91,8 +97,8 @@ serversocket.listen()
 # 单通道通讯
 # clientsocket, addr = serversocket.accept()  # accept()方法中返回了sock和addr
 
-'''serversocket.accept()每次只能接收一个请求 一个请求进来之后就加入while True无法出来
-    所以当多用户连接时 就把每一个serversocket做一个线程'''
+# serversocket.accept()每次只能接收一个请求 一个请求进来之后就加入while True无法出来
+#     所以当多用户连接时 就把每一个serversocket做一个线程
 
 
 # 定义一个函数 将socket_client中的逻辑拿过来
@@ -101,6 +107,7 @@ def handle_sock(clientsocket, addr):
         data = clientsocket.recv(1024)  # 接收数据 控制数据大小 数据为字符串
         print(data.decode('utf-8'))  # 接收数据后解码 返回字符串
         datastr = data.decode('utf-8')
+        print('线程名称为:' + threading.current_thread().name)
         if datastr == 'bye':
             break
         else:
@@ -115,6 +122,7 @@ while True:
 
     # 用线程去处理新接收的链接(用户)
     client_thread = threading.Thread(target=handle_sock, args=(clientsocket, addr))
+    print('线程名称为:' + threading.current_thread().name)
     client_thread.start()  # 启动线程
 
     # data = clientsocket.recv(1024)

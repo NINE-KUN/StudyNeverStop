@@ -34,7 +34,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host = socket.gethostname()
 
 # 设置端口号
-port = 9997
+port = 9996
 
 # 链接服务、指定主机和端口
 s.connect((host, port))
