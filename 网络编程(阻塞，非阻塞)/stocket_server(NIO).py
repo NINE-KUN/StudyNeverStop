@@ -3,9 +3,13 @@ import threading
 from collections import deque
 
 """
- BIO不会以为客户端的增加而分配线程 都在一个主线程运行 当客户端发送消息 服务器可以依次返回相应
+ NIO(同步非阻塞)不会以为客户端的增加而分配线程 都在一个主线程运行 当客户端发送消息 服务器可以依次返回相应
  比如 客户端1————>服务器 发送111 同时 客户端2————>服务器 发送222 此时服务器可以返回响应111给客户端1 然后再给客户端返回响应222给客户端2
  不会产生阻塞（即不需要一次客户端与服务器完整的通信后才开始下一个客户端与服务器的通信）
+ 
+ 同步非阻塞的原因是 不断循环尝试send() ，因为此时connect()（主动初始化TCP服务器连接）
+ 已经为非阻塞，在send()时不值到socket的连接是否就绪，只有不断尝试
+ ，直到成功为止，即发送数据成功，rece()（接收TCP数据，数据以字符串形式返回）也是如此 所以有while true
 """
 # 创建stocket对象
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # ipv4协议+tcp协议
@@ -35,8 +39,7 @@ while True:
     except BlockingIOError as e:
         pass
     else:
-        # 设置为非阻塞
-        conn.setblocking(False)
+        conn.setblocking(False) # 设置为非阻塞
         connections.append((conn, addr))
     for conn, addr in connections:
         try:
