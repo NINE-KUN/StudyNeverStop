@@ -77,9 +77,9 @@ import threading
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # 获取本地主机名
-host = socket.gethostname()
+host = ''
 
-port = 9997
+port = 9996
 
 # 绑定(协议、地址和端口)
 serversocket.bind((host, port))
