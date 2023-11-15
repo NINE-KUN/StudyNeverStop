@@ -44,7 +44,7 @@ class Main:
 
     @staticmethod
     def get_operations(_list):
-        for son_operation in Operations.__subclasses__():
+        for son_operation in Operations.__subclasses__(): # __subclasses__获取所有Operation的所有直接子类 返回列表
             son_operation(_list).operation()
 
 
