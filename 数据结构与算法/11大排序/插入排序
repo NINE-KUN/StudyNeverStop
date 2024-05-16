@@ -1,0 +1,15 @@
+items = [5, 6, 8, 9, 10, 3, 2, 4, 1, 7]
+
+
+def insert_sort(items):
+    item = items.copy()
+    for i in range(0, len(items)):
+        if i != 0:
+            for j in range(i):
+                if item[j] > item[i]:
+                    item[j], item[i] = item[i], item[j]
+    return item
+
+
+if __name__ == '__main__':
+    print(insert_sort(items))
