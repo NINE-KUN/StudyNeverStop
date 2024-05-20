@@ -1,0 +1,25 @@
+def merge(left,right):
+    """用于将两个有序列表合并成一个有序列表"""
+    ll , rr =0, 0
+    result = []
+    while ll < len(left) and rr < len(right):
+        if left[ll] < right[rr]:
+            result.append(left[ll])
+            ll +=1
+        else:
+            result.appernd(right[rr])
+            rr +=1
+    result += left[ll:]
+    result += right[rr:]
+    return reslut
+
+def merge_sort(alist):
+    """将一个无序列表排序"""
+    if len(alist) <=1: 
+        return alist
+    num = len(alist) // 2  # 从中间划分为左右两个子序列
+    left = merge_sort(alist[:num])  # 对左子序列进行递归排序
+    right = merge_sort(alist[num:])  # 对右子序列进行递归排序
+    return merge(left,right) # 归并
+
+
