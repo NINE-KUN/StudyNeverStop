@@ -14,24 +14,28 @@ func main() {
 	foo := make([]int, 5) //定义了一个长度为5 容量为5的切片
 	foo[3] = 42
 	foo[4] = 100
-	fmt.Println(foo)
+	fmt.Printf("第一次foo的值为:%d\n", foo)
 
 	// 切片表达式定义切片
-	bar := foo[1:4] // bar的切片容量 是foo的容量-1 因为用切片表达式定义切片时 从star开始的位置计算 起始位做左边的数据无法访问
+	bar := foo[1:4] // bar的切片容量 是foo的容量-1 因为用切片表达式定义切片时 从star开始的位置计算 起始位往左边是无法拓展的
 	bar[1] = 99     // 会改变原切片foo的值
+
+	bar1 := foo[:4]
+	bar1[0] = 1 //多个切片指向同一个底层数组 修改时会互相影响
 
 	goo := make([]int, 3, 9) //超出容量会扩容 新切片是原切片的2倍 此时底层的数组也会是新数组(说明一个切片的底层数组永远不会被替换)
 	goo[1] = 10              //0-2可以设置值s
 
 	//bar 和 foo 内存共享
-	fmt.Println(foo)
-	fmt.Println(bar)
-	fmt.Println(goo)
+	fmt.Printf("第二次foo的值为: %d\n", foo)
+	fmt.Printf("第一次bar的值为: %d\n", bar)
+	fmt.Printf("第一次bar1的值为: %d\n", bar1)
+	fmt.Printf("第一次goo的值为: %d\n", goo)
 
 	foo = append(foo, 8) //此时超过了第一次设置的容量 新切片生成容量会原切片2倍 cap为10
-	fmt.Println(foo)
-	fmt.Printf("此时切片长度为：%d\n", len(foo))
-	fmt.Printf("此时切片容量为：%d\n", cap(foo))
+	fmt.Printf("第三次foo的值为:%d\n", foo)
+	fmt.Printf("此时foo切片长度为：%d\n", len(foo))
+	fmt.Printf("此时foo切片容量为：%d\n", cap(foo))
 
 	a := make([]int, 32)
 	b := a[1:16]
@@ -43,18 +47,19 @@ func main() {
 
 	//append() 这个函数在 cap(容量) 不够用的时候，就会重新分配内存以扩大容量，如果够用，就不会重新分配内存了！
 	path := []byte("AAAA/BBBBBBBBB") // 定义了切片 切片中元素类型为字符串的比特值
-	fmt.Println(path)
+	fmt.Printf("path的值为%s\n", path)
 	speIndex := bytes.IndexByte(path, '/') //  /的索引 如果有重复取第一个匹配元素的索引
-	fmt.Println(speIndex)
+	fmt.Printf("'/'的索引值为%d\n", speIndex)
 
 	dir1 := path[:speIndex]   //  / 之前的元素比特 cap=14 len=4
 	dir2 := path[speIndex+1:] //  / 之后的元素比特 cap = 9 len 9
-	fmt.Println(dir1)
-	fmt.Println(dir2)
+	fmt.Printf("/ 之前的元素比特为%d\n", dir1)
+	fmt.Printf("/ 之后的元素比特为%d\n", dir2)
 
 	fmt.Println("dir1 =>", string(dir1)) //prints: dir1=[65 65 65 65] => AAAA
+	fmt.Printf("dir1的长度len为%d,容量cap为%d\n", len(dir1), cap(dir1))
 	fmt.Println("dir2 =>", string(dir2)) //prints: dir2=[66 66 66 66 66 66 66 66 66] => BBBBBBBBB
-
+	fmt.Printf("dir2的长度len为%d,容量cap为%d\n", len(dir2), cap(dir2))
 	dir1 = append(dir1, "suffix"...)
 
 	fmt.Println("dir1 =>", string(dir1)) //prints: dir1 => AAAAsuffix
