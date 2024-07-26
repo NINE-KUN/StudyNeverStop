@@ -1,10 +1,16 @@
 前后端分离身份校验和鉴权
 https://juejin.cn/post/6997011544492146702
+一文教你搞定所有前端鉴权与后端鉴权方案，让你不再迷惘
 https://juejin.cn/post/7129298214959710244
+前后端分离常用的认证方式（ Session 、JWT）
+https://juejin.cn/post/6972395146599989279
 https://juejin.cn/post/6993977104299720741?searchId=20240724111418A2AF3E8299B1A5AEB15C
 https://cloud.tencent.com/developer/article/2144184
 https://juejin.cn/post/6873367449241124877
-Django-10.1. Django Rest Framework与JWT身份验证：https://www.acwing.com/solution/content/175754/
-前后端分离常用的认证方式（ Session 、JWT）https://juejin.cn/post/6972395146599989279
+Django-10.1. Django Rest Framework与JWT身份验证
+https://www.acwing.com/solution/content/175754/
+前后端分离常用的认证方式（ Session 、JWT）
+https://juejin.cn/post/6972395146599989279
 Django前后端分离实现登录验证码功能
 https://juejin.cn/post/6993977104299720741?searchId=20240724111418A2AF3E8299B1A5AEB15C
+golang博客https://ijayer.github.io/
