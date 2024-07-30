@@ -1,1 +1,75 @@
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+)
+
+func main() {
+	// 声明一个变量 类型为字典 key:int,value:string 声明未初始化的变量值为nil
+	var map_one map[int]string
+	// 初始化变量为字典(构建一个key:int,value:string，长度为0的字典给变量map_one) 初始化后的变量为可用的空值变量不再是nil
+	// make(type,len,cap)type只可以是 slice,map,channel
+	map_one = make(map[int]string, 0)
+	//给字典赋值
+	map_one[1] = "QianKun"
+	fmt.Println("map_one:", map_one)
+
+	var map_two map[int]string = make(map[int]string)
+	map_two[2] = "KKKUN"
+	fmt.Println("map_four:", map_two)
+
+	var map_three map[int]string = map[int]string{}
+	map_three[3] = "AKUN"
+	fmt.Println("map_five:", map_three)
+
+	map_four := make(map[int]string)
+	map_four[4] = "KK"
+	fmt.Println("map_four:", map_four)
+
+	map_five := map[int]string{}
+	map_five[5] = "KUN"
+	fmt.Println("map_five:", map_five)
+
+	map_six := map[int]string{
+		6: "NINEKUN",
+	}
+	fmt.Println("map_six:", map_six)
+
+	person := map[int]string{
+		1: "QianKun",
+		2: "ZouTao",
+		3: "LiuJiaoRui",
+		4: "WeiWanHui",
+	}
+	fmt.Println(person)
+
+	//序列化
+	jsons, errs := json.Marshal(person)
+	if errs != nil {
+		fmt.Println("json marshal error:", errs)
+	}
+	fmt.Println("json data:", string(jsons))
+
+	//反序列化
+	map_data := make(map[string]interface{})
+	errs = json.Unmarshal([]byte(jsons), &map_data)
+	if errs != nil {
+		fmt.Println("json marshal error:", errs)
+	}
+	fmt.Println("map data:", map_data)
+
+	//查找数据
+	value, ok := person[66]
+	fmt.Println(value, ok) //value 查询到的值，如果不存在ok返回false
+
+	// 插入or修改数据 如果存储在键为修改 如果不存在为插入
+	person[1] = "KK"
+	fmt.Println(person)
+	person[1] = "QianKun"
+	fmt.Println(person)
+	person[5] = "ZhangWen"
+	fmt.Println(person)
+
+}
 
