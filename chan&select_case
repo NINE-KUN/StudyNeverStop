@@ -1,0 +1,214 @@
+package main
+
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
+
+//通道使用语法
+/*
+data := <- a // read from channel a
+a <- data // write to channel a
+v, ok := <- a //从一个channel中读取
+它们的基本特性如下。
+对于同一个通道，发送操作之间是互斥的，接收操作之间也是互斥的。
+发送操作和接收操作中对元素值的处理都是不可分割的。
+发送操作在完全完成之前会被阻塞。接收操作也是如此。*/
+func main() {
+	fmt.Println("main start")
+	//channel是引用类型的数据，在作为参数传递的时候，传递的是内存地址。
+	// 定义一个有缓冲的通道 容量为3
+	chl := make(chan int, 3)
+	chl <- 2
+	chl <- 1
+	chl <- 3
+	// elem1 := chl 获取通道的引用
+	elem1 := <-chl //获取通道中的数据
+	elem2 := <-chl
+	elem3 := <-chl
+	fmt.Printf("The first element received from channel ch1: %d\n", elem1)
+	fmt.Printf("The second element received from channel ch2: %d\n", elem2)
+	fmt.Printf("The thirty element received from channel ch3: %d\n", elem3)
+
+	//  只能向通道发送 不能从通道接收的通道 只写通道(发送通道)
+	var uselessChan = make(chan<- int, 1)
+	fmt.Printf("单向通道，只能向该通道发送数据：%v\n", uselessChan)
+
+	//  只能从通道接收 不能向通道发送的通道 只读通道(接收通道)
+	var anotherUserlessChan = make(<-chan int, 1)
+	fmt.Printf("单向通道，只能从该通道接收数据：%v\n", anotherUserlessChan)
+
+	ch := make(chan string, 4) // 声明一个缓冲区为4的通道赋值给变量ch
+
+	go producer(ch) // 声明的ch传入producer 将数据发送到通道(对通道赋值)
+	go customer(ch) // 循环取出通道中的值 赋值给msg 并输出(对赋值后的通道取值)
+
+	//死锁测试
+
+	//发生死锁
+	/*原因 因为ch1是一个无缓冲的channel。
+	当执行ch1 <- 1时，goroutine会阻塞，直到另一个goroutine从ch1中读取数据。
+	但是，在这个代码片段中，没有其他goroutine尝试从ch1读取数据，因此发送操作会无限期地阻塞，导致死锁。*/
+	ch1 := make(chan int)
+	// ch1 <- 1
+
+	// 不发生死锁
+	/*原因：
+	dead_lock函数作为一个独立的goroutine运行。
+	当dead_lock函数尝试向ch1发送数据时，它不会阻塞主goroutine。
+	由于dead_lock函数中的goroutine会尝试发送数据到ch1，
+	而主goroutine并没有立即尝试从ch1读取数据，所以发送操作不会阻塞。
+	然而，如果主goroutine尝试从ch1读取数据，那么读取操作将会成功，因为dead_lock中的goroutine已经发送了一个值。*/
+	go dead_lock(ch1)
+
+	go SendIn(make(chan<- int, 3)) //调用SendIn时只需要传入一个元素类型匹配的双向通道就可以,go语言会自动转化为匹配的单项通道
+	time.Sleep(1 * time.Second)    // 延缓主线程 休眠一秒钟
+	fmt.Println("main end")
+
+}
+
+func producer(ch chan string) {
+	// 方法prodecer 接收一个通道参数 并依次将字符串发送到通道
+	// 调用时 该方法producer star 然后将参数发送到通道 然后producer end 运行结束
+	fmt.Println("producer star")
+	ch <- "QianKun"
+	ch <- "ZouTao"
+	ch <- "WeiWanHui"
+	ch <- "LiuJiaRui"
+	fmt.Println("producer end")
+	close(ch)
+}
+
+func customer(ch chan string) {
+	// 通过循环接收通道的数据 并赋值给msg
+	for {
+		msg, ok := <-ch
+		if !ok {
+			fmt.Printf("已取出所有数据%s\n", ok)
+			break
+		}
+		fmt.Println(msg, ok)
+	}
+}
+
+// 用func关键字声明了一个叫做SendInt的函数。这个函数只接受一个chan<- int类型的参数。
+// 在这个函数中的代码只能向参数ch发送元素值，而不能从它那里接收元素值。
+// 这就起到了约束函数行为的作用。
+func SendIn(ch chan<- int) {
+	ch <- rand.Intn(1000)
+}
+
+// 该接口类型声明的花括号中，每一行都代表着一个方法的定义
+// Notifier接口中的SendInt方法只会接受一个发送(只写)通道
+type Notifier interface {
+	SendInt(ch chan<- int)
+}
+
+//关于通道死锁
+/*使用通道时要考虑的一个重要因素是死锁。
+如果Goroutine在一个通道上发送数据，那么预计其他的Goroutine应该接收数据。
+如果这种情况不发生，那么程序将在运行时出现死锁。
+类似地，如果Goroutine正在等待从通道接收数据，那么另一些Goroutine将会在该通道上写入数据，否则程序将会死锁。*/
+func dead_lock(ch chan int) {
+	ch <- 1
+	close(ch)
+}
+
+/*长时间阻塞*/
+// 示例1。
+// ch_1 := make(chan int, 1)
+// ch_1 <- 1
+// //ch_1 <- 2 // 通道已满，因此这里会造成阻塞。
+
+// // 示例2。
+// ch_2 := make(chan int, 1)
+// //elem, ok := <-ch_2 // 通道已空，因此这里会造成阻塞。
+// //_, _ = elem, ok
+// ch_2 <- 1
+
+// // 示例3。
+// var ch_3 chan int
+// //ch_3 <- 1 // 通道的值为nil，因此这里会造成永久的阻塞！
+// //<-ch_3 // 通道的值为nil，因此这里会造成永久的阻塞！
+// _ = ch_3
+
+/*对于非缓冲通道，情况要简单一些。
+无论是发送操作还是接收操作，一开始执行就会被阻塞，直到配对的操作也开始执行，才会继续传递。
+由此可见，非缓冲通道是在用同步的方式传递数据。也就是说，只有收发双方对接上了，数据才会被传递。
+并且，数据是直接从发送方复制到接收方的，中间并不会用非缓冲通道做中转。
+相比之下，缓冲通道则在用异步的方式传递数据。
+对于值为nil的通道，不论它的具体类型是什么，对它的发送操作和接收操作都会永久地处于阻塞状态。
+它们所属的 goroutine 中的任何代码，都不再会被执行。*/
+
+
+
+
+
+
+
+package main
+
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
+
+func main() {
+	example1()
+	example2()
+}
+
+// 示例1。
+func example1() {
+	// 准备好几个通道。
+	intChannels := [3]chan int{
+		make(chan int, 1),
+		make(chan int, 1),
+		make(chan int, 1),
+	}
+	// 随机选择一个通道，并向它发送元素值。
+	index := rand.Intn(3)
+	fmt.Printf("The index: %d\n", index)
+	intChannels[index] <- index
+	// 哪一个通道中有可取的元素值，哪个对应的分支就会被执行。
+	/* select 语句是一个用于处理通道操作的选择结构，类似于 switch 语句，但是专门用于通道通信。
+	每个 case 必须是一个通道操作，可以是发送或接收数据，而且 select 会随机选择一个准备好的通道进行操作。
+	如果没有通道准备好，并且没有 default 子句，则 select 将阻塞，直到至少有一个通道可以进行通信 */
+	select {
+	case <-intChannels[0]:
+		fmt.Println("第一个被选中")
+	case <-intChannels[1]:
+		fmt.Println("第二个被选中.")
+	case elem := <-intChannels[2]:
+		fmt.Printf("第三个被选中., 元素是 %d.\n", elem)
+	default:
+		fmt.Println("没有被选中的")
+	}
+	time.AfterFunc(time.Second, func() {
+		close(intChannels[index])
+		fmt.Printf("关闭通道%d\n", index)
+	})
+	_, ok := <-intChannels[index]
+	if !ok {
+		fmt.Printf("确认已关闭通道%d\n", index)
+	}
+}
+
+// 示例2。
+func example2() {
+	intChan := make(chan int, 1)
+	// 一秒后关闭通道。
+	time.AfterFunc(time.Second, func() {
+		close(intChan)
+	})
+	select {
+	case _, ok := <-intChan:
+		if !ok {
+			fmt.Println("关闭.")
+			break
+		}
+		fmt.Println("选择.")
+	}
+}
